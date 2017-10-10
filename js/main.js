@@ -5,15 +5,14 @@
     var index;
     var count = 1;
     var pad;
-    var i;
-    var k = 0;
-    var dataId;
+    var i, j;
+    var num = 0;
+    //var dataId;
     //var id;
     var element;
     var clicked;
     var tone;
     var checkForClickId, genPatternId, flashId, displayId1, displayId2;
-    
 
     //cache dom
     var simon = $("#simon");
@@ -37,7 +36,7 @@
             buttonOn.css("visibility", "visible");
             displayText.text("--");
             startButton.on("click", start);
-        } 
+        }
         else {
             on = false;
 
@@ -46,11 +45,10 @@
             clearTimeout(flashId);
             clearTimeout(displayId1);
             clearTimeout(displayId2);
-            
-            
+
             buttonOff.css("visibility", "visible");
             buttonOn.css("visibility", "hidden");
-            
+
             displayText.text("");
             //padGroup.css("opacity", "0.5");
             startButton.off();
@@ -62,7 +60,7 @@
 
     function start() {
         clicked = undefined;
-        player.length = 0;        
+        player.length = 0;
         pattern.length = 0;
         getPattern();
         console.log(pattern);
@@ -75,7 +73,7 @@
         // setTimeout(function () {
         //     padGroup.on("click", padClick);
         // }, 4500);
-        checkForClick(4500 + 5000);                           
+        checkForClick(4500 + 5000);
     }
 
 
@@ -90,7 +88,7 @@
 
         if (arguments[1] !== 0) {
             displayId1 = setTimeout(function () {
-                for (var i = 0; i < blinks; i += 1) {
+                for (i = 0; i < blinks; i += 1) {
                     displayText.text(content).fadeOut(250);
                     displayText.text(content).fadeIn(250);
                 }
@@ -100,7 +98,7 @@
             displayId2 = setTimeout(function () {
                 displayText.text(content);
             }, delay);
-        }         
+        }
     }
 
 
@@ -108,14 +106,14 @@
         clearTimeout(genPatternId);
 
         if (idx < cnt) {
-            genPatternId = setTimeout (function () {  
+            genPatternId = setTimeout(function () {
                 pad = simon.find("[data-id = " + pattern[idx] + "]");
-                tone = simon.find("#audio" + pattern[idx]);                   
+                tone = simon.find("#audio" + pattern[idx]);
                 flash(pad, 500);
                 playSound(tone);
                 idx += 1;
                 genPattern(idx, cnt, 1000);
-            }, delay); 
+            }, delay);
         }
     }
 
@@ -127,7 +125,7 @@
             checkForClickId = setTimeout(function () {
                 padGroup.off();
                 player.length = 0;
-                k = 0;
+                num = 0;
                 display("!!", 2, 0);
                 display(count, 0, 2000);
                 genPattern(index, count, 3500);
@@ -135,9 +133,9 @@
                 // setTimeout(function () {
                 //     padGroup.on("click", padClick);
                 // }, 3500 + (1000 * count));
-                checkForClick(3500 + (1000 * count) + 5000);        
+                checkForClick(3500 + (1000 * count) + 5000);
             }, delay);
-        } 
+        }
     }
 
 
@@ -149,7 +147,7 @@
 
 
     function getPattern() {
-        for (var i = 20 - 1; i >= 0; i -= 1) {
+        for (j = 20 - 1; j >= 0; j -= 1) {
             pattern.push(getRandom(1, 4));
         }
     }
@@ -159,15 +157,15 @@
         setTimeout(function () {
             padGroup.on("click", padClick);
         }, delay);
-    }    
+    }
 
 
-    function flash(pad, delay) {                    
-        flashId = setTimeout(function() {
+    function flash(pad, delay) {
+        flashId = setTimeout(function () {
             pad.css("opacity", "1");
             setTimeout(function () {
                 pad.removeAttr("style");
-            }, delay);              
+            }, delay);
         }, 0);
     }
 
@@ -176,7 +174,7 @@
         tone[0].currentTime = 0;
         tone[0].volume = 1;
         tone[0].play();
-      }
+    }
 
 
     function padClick() {
@@ -185,24 +183,24 @@
         element = $(this); //get the element clicked (#padGre, #padRed, #padYel, #padBlu)
         clicked = parseInt(element.data("id"), 10); //get the value of the data-id attribute (1, 2, 3, 4)
         tone = element.find("#audio" + clicked);
-        var patternLength = pattern.slice(0, count).length;
+        //var patternLength = pattern.slice(0, count).length;
 
         flash(element, 500);
         playSound(tone);
 
-        if (clicked === pattern[k] && k < count) {
+        if (clicked === pattern[num] && num < count) {
             // if id's match, push element clicked into player array
-            console.log("k = " + k);
+            console.log("num = " + num);
             console.log("count = " + count);
 
             player.push(clicked);
-            k++;
+            num += 1;
             clicked = undefined;
             checkForClick(5000);
             console.log("player[" + player + "] === " + "pattern[" + pattern.slice(0, count) + "]");
         }
         else {
-            // else start over            
+            // else start over
             clicked = undefined;
             checkForClick(0);
         }
@@ -212,7 +210,7 @@
             // if arrays at current count match
 
             clearTimeout(checkForClickId);
-            
+
             if (player.length === 20) {
                 // check for win
                 display("win", 0, 0);
@@ -220,16 +218,16 @@
             else {
                 // reset and increase count
                 player.length = 0;
-                k = 0;
-                count++;
+                num = 0;
+                count += 1;
                 display(count, 0, 0);
                 genPattern(index, count, 1500);
-                checkForClick(1500 + 5000 + (1000 * count)); 
+                checkForClick(1500 + 5000 + (1000 * count));
             }
         }
-    }       
+    }
 
-})();
+}());
 
 
 (function () {
