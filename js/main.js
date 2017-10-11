@@ -1,5 +1,6 @@
 (function () {
     var on = false;
+    var strict = false;
     var player = [];
     var pattern = [];
     var index;
@@ -7,8 +8,6 @@
     var pad;
     var i, j;
     var num = 0;
-    //var dataId;
-    //var id;
     var element;
     var clicked;
     var tone;
@@ -17,10 +16,11 @@
     //cache dom
     var simon = $("#simon");
     var displayText = simon.find("#displayText");
+    var startButton = simon.find("#startButton");
+    var strictButton = simon.find("#strictButton");
     var powerSwitch = simon.find("#powerSwitch");
     var buttonOff = simon.find("#buttonOff");
-    var buttonOn = simon.find("#buttonOn");
-    var startButton = simon.find("#startButton");
+    var buttonOn = simon.find("#buttonOn");    
     var padGroup = simon.find(".pad");
 
 
@@ -35,7 +35,9 @@
             buttonOff.css("visibility", "hidden");
             buttonOn.css("visibility", "visible");
             displayText.text("--");
+            strictButton.on("click", strictPlay);
             startButton.on("click", start);
+
         }
         else {
             on = false;
@@ -74,6 +76,16 @@
         //     padGroup.on("click", padClick);
         // }, 4500);
         checkForClick(4500 + 5000);
+    }
+
+    function strictPlay() {
+        if (!strict) {
+            strict = true;
+        }
+        else {
+            strict = false;
+        }
+        console.log(strict);
     }
 
 
@@ -201,8 +213,13 @@
         }
         else {
             // else start over
-            clicked = undefined;
-            checkForClick(0);
+            if (strict) {
+                start();
+            }
+            else {
+                clicked = undefined;
+                checkForClick(0);
+            }
         }
 
 
@@ -211,7 +228,7 @@
 
             clearTimeout(checkForClickId);
 
-            if (player.length === 20) {
+            if (player.length === 5) {
                 // check for win
                 display("win", 0, 0);
             }
@@ -268,4 +285,4 @@
     // Hide method from for-in loops
     Object.defineProperty(Array.prototype, "equals", {enumerable: false});
 
-})();
+}());
