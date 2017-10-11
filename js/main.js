@@ -52,7 +52,6 @@
             buttonOn.css("visibility", "hidden");
 
             displayText.text("");
-            //padGroup.css("opacity", "0.5");
             startButton.off();
             padGroup.off();
             return;
@@ -72,9 +71,6 @@
         display(count, 0, 2000);
         genPattern(index, count, 3500);
         padGroupOn(4500);
-        // setTimeout(function () {
-        //     padGroup.on("click", padClick);
-        // }, 4500);
         checkForClick(4500 + 5000);
     }
 
@@ -142,9 +138,6 @@
                 display(count, 0, 2000);
                 genPattern(index, count, 3500);
                 padGroupOn(3500 + (1000 * count));
-                // setTimeout(function () {
-                //     padGroup.on("click", padClick);
-                // }, 3500 + (1000 * count));
                 checkForClick(3500 + (1000 * count) + 5000);
             }, delay);
         }
