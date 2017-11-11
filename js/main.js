@@ -1,17 +1,24 @@
 (function () {
     var on = false;
-    var strict = false;
+    var strict = false; //check if strict is a reserved word
     var player = [];
     var pattern = [];
-    var index;
-    var count = 1;
-    var pad;
-    var i, j;
+    var patternLength = 1;
+    var index = 0;    
+    var pad = null;
+    var i = null;
+    var j = null;
     var num = 0;
-    var element;
-    var clicked;
-    var tone;
-    var checkForClickId, genPatternId, flashId, displayId1, displayId2;
+    var element = null;
+    var clicked = null;
+    var tone = null;
+    var checkForClickId = null;
+    var genPatternId = null;
+    var flashId = null;
+    var displayId1 = null;
+    var displayId2 = null;
+    var padGroupOnId = null;
+    var padGroupOnStatus = null;
 
     //cache dom
     var simon = $("#simon");
@@ -30,8 +37,6 @@
     function onOff() {
         if (!on) {
             on = true;
-            index = 0;
-
             buttonOff.css("visibility", "hidden");
             buttonOn.css("visibility", "visible");
             displayText.text("--");
@@ -41,38 +46,71 @@
         }
         else {
             on = false;
+            strict = false;
+            player = [];
+            pattern = [];
+            patternLength = 1;
+            index = 0;
+            pad = null;
+            i = null;
+            j = null;
+            num = 0;
+            element = null;
+            clicked = null;
+            tone = null;
 
             clearTimeout(checkForClickId);
+            checkForClickId = null;
             clearTimeout(genPatternId);
+            genPatternId = null;
             clearTimeout(flashId);
+            flashId = null;
             clearTimeout(displayId1);
+            displayId1 = null;
             clearTimeout(displayId2);
+            displayId2 = null;
+            clearTimeout(padGroupOnId);
+            padGroupOnId = null;
 
             buttonOff.css("visibility", "visible");
             buttonOn.css("visibility", "hidden");
 
             displayText.text("");
             startButton.off();
-            padGroup.off();
+            strictButton.off();
+            padGroupOff();
             return;
         }
     }
 
 
     function start() {
-        clicked = undefined;
+        clearTimeout(checkForClickId);
+        checkForClickId = null;
+        clearTimeout(genPatternId);
+        genPatternId = null;
+        clearTimeout(flashId);
+        flashId = null;
+        clearTimeout(displayId1);
+        displayId1 = null;
+        clearTimeout(displayId2);
+        displayId2 = null;
+
+
+        clicked = null;
         player.length = 0;
         pattern.length = 0;
         getPattern();
         console.log(pattern);
 
-        count = 1;
+        patternLength = 1;
         display("--", 2, 0);
-        display(count, 0, 2000);
-        genPattern(index, count, 3500);
+        display(patternLength, 0, 2000);
+        genPattern(index, patternLength, 3500);
         padGroupOn(4500);
         checkForClick(4500 + 5000);
     }
+
 
     function strictPlay() {
         if (!strict) {
@@ -88,6 +126,7 @@
     function display(content, blinks, delay) {
         //clearTimeout(displayId1);
         clearTimeout(displayId2);
+        displayId2 = null;
 
         if (arguments.length !== 3) {
             console.warn("display() requires 3 arguments");
@@ -112,6 +151,7 @@
 
     function genPattern(idx, cnt, delay) {
         clearTimeout(genPatternId);
+        genPatternId = null;
 
         if (idx < cnt) {
             genPatternId = setTimeout(function () {
@@ -128,17 +168,18 @@
 
     function checkForClick(delay) {
         clearTimeout(checkForClickId);
+        checkForClickId = null;
 
         if (clicked === undefined) {
             checkForClickId = setTimeout(function () {
-                padGroup.off();
+                padGroup.off("click");
                 player.length = 0;
                 num = 0;
                 display("!!", 2, 0);
-                display(count, 0, 2000);
-                genPattern(index, count, 3500);
-                padGroupOn(3500 + (1000 * count));
-                checkForClick(3500 + (1000 * count) + 5000);
+                display(patternLength, 0, 2000);
+                genPattern(index, patternLength, 3500);
+                padGroupOn(3500 + (1000 * patternLength));
+                checkForClick(3500 + (1000 * patternLength) + 5000);
             }, delay);
         }
     }
@@ -157,11 +198,23 @@
         }
     }
 
+    function padGroupOff() {
+        if (padGroupOnStatus) {
+            padGroup.off("click");
+            padGroupOnStatus = false;
+            console.log("padGroup on = " + padGroupOnStatus);
+        }        
+    }
+
 
     function padGroupOn(delay) {
-        setTimeout(function () {
-            padGroup.on("click", padClick);
-        }, delay);
+        if (!padGroupOnStatus) {
+            padGroupOnId = setTimeout(function () {
+                padGroup.on("click", padClick);
+            }, delay);
+            padGroupOnStatus = true;
+            console.log("padGroup on = " + padGroupOnStatus);
+        }
     }
 
 
@@ -183,56 +236,113 @@
 
 
     function padClick() {
+        padGroupOff();
         clearTimeout(checkForClickId);
+        checkForClickId = null;
 
         element = $(this); //get the element clicked (#padGre, #padRed, #padYel, #padBlu)
         clicked = parseInt(element.data("id"), 10); //get the value of the data-id attribute (1, 2, 3, 4)
         tone = element.find("#audio" + clicked);
-        //var patternLength = pattern.slice(0, count).length;
+        //var patternLength = pattern.slice(0, patternLength).length;
 
         flash(element, 500);
         playSound(tone);
 
-        if (clicked === pattern[num] && num < count) {
+        if (clicked === pattern[num] && num < patternLength) {
             // if id's match, push element clicked into player array
-            console.log("num = " + num);
-            console.log("count = " + count);
+            clearTimeout(checkForClickId);
+            checkForClickId = null;
+            
+            console.log("%c Get pattern at current patternLength length (patternLength starts at 1 and increment by 1 on each iteration)", "color: blue;");
+            console.log("%c patternLength = " + patternLength, "color: chocolate;");
+            console.log("pattern = " + "[" + pattern + "]");
+            //console.log("pattern size =" + "%c " + patternLength + " (patternLength)", "color: chocolate;");
+            console.log("pattern.slice(0," + "%c patternLength)     " + "// " + patternLength, "color: chocolate;");
+            console.log("pattern = " + "[" + pattern.slice(0, patternLength) + "]");
+
+            console.log("\n");
+
+            console.log("%c Check if clicked === value of pattern starting at index 0 (num)", "color: blue;");
+            console.log("%c clicked = " + clicked, "color: chocolate");
+            //console.log("Id of pad clicked = clicked     " + "//" + clicked);
+            console.log("%c num = " + num, "color: cadetblue");            
+            //console.log("Value of pattern[num] = " + pattern[num]);            
+            console.log("if clicked === pattern[" + num + "]     " + "%c // " + clicked + " === " + pattern[num], "color: chocolate;");
+            console.log("player.push(clicked)");                       
 
             player.push(clicked);
+            console.log("player = " + "[" + player + "]");
             num += 1;
+            console.log("num += 1");
+            console.log("\n");
             clicked = undefined;
             checkForClick(5000);
-            console.log("player[" + player + "] === " + "pattern[" + pattern.slice(0, count) + "]");
+            padGroupOn(0);
         }
         else {
             // else start over
             if (strict) {
+                clearTimeout(checkForClickId);
+                checkForClickId = null;
+
+                console.error("Error: clicked does not match pattern[num]");
+                console.log("strict = " + strict);
+                console.log("%c Get pattern at current patternLength length (patternLength starts at 1 and increment by 1 on each iteration)", "color: blue;");
+                console.log("%c patternLength = " + patternLength, "color: chocolate;");
+                console.log("pattern = " + "[" + pattern + "]");
+                //console.log("pattern size =" + "%c " + patternLength + " (patternLength)", "color: chocolate;");
+                console.log("pattern.slice(0," + "%c patternLength)     " + "// " + patternLength, "color: chocolate;");
+                console.log("pattern = " + "[" + pattern.slice(0, patternLength) + "]");
+
+                console.log("\n");
+
+                console.log("%c Check if clicked === value of pattern starting at index 0 (num)", "color: blue;");
+                console.log("%c clicked = " + clicked, "color: chocolate");
+                //console.log("Id of pad clicked = clicked     " + "//" + clicked);
+                console.log("%c num = " + num, "color: cadetblue");            
+                //console.log("Value of pattern[num] = " + pattern[num]);            
+                console.log("if clicked === pattern[" + num + "]     " + "%c // " + clicked + " === " + pattern[num], "color: chocolate;");
+                console.log("player.push(clicked)");
+                num = 0;
+                console.log("player[" + player + "] === " + "pattern[" + pattern.slice(0, patternLength) + "]");
+                console.log("start();");
                 start();
+                return;
             }
             else {
+                //clearTimeout(checkForClickId);
                 clicked = undefined;
+                //padGroupOn();
                 checkForClick(0);
+                return;
             }
         }
 
 
-        if (player.equals(pattern.slice(0, count))) {
-            // if arrays at current count match
-
+        // if pattern is complete - player array matches pattern array
+        if (player.equals(pattern.slice(0, patternLength))) {
+            // if arrays at current patternLength match
+            console.log("%c Check if player array === pattern array", "color: blue;");
+            console.log("player[" + player + "] === " + "pattern[" + pattern.slice(0, patternLength) + "]");
+            console.log("\n");
+            console.log("\n");
             clearTimeout(checkForClickId);
+            checkForClickId = null;
 
+            // check if win
             if (player.length === 5) {
                 // check for win
                 display("win", 0, 0);
             }
             else {
-                // reset and increase count
+                // else reset and increase patternLength by 1 - 
+                clicked = undefined;
                 player.length = 0;
                 num = 0;
-                count += 1;
-                display(count, 0, 0);
-                genPattern(index, count, 1500);
-                checkForClick(1500 + 5000 + (1000 * count));
+                patternLength += 1;
+                display(patternLength, 0, 0);
+                genPattern(index, patternLength, 1500);
+                checkForClick(1500 + 5000 + (1000 * patternLength));
             }
         }
     }
