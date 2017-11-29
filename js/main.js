@@ -4,7 +4,7 @@
     var player = [];
     var pattern = [];
     var patternLength = 1;
-    var index = 0; //consider renaming this to arrayIndex  
+    var patternIndex = 0; //consider renaming this to arrayIndex  
     var pad = null;
     //var i = null; //iterator, should be initialized to a number
     //var j = null; //iterator, should be initialized to a number
@@ -51,7 +51,7 @@
             player = [];
             pattern = [];
             patternLength = 1;
-            index = 0;
+            patternIndex = 0;
             pad = null;
             //i = null;
             //j = null;
@@ -107,7 +107,7 @@
         patternLength = 1;
         display("--", 2, 0);
         display(patternLength, 0, 2000);
-        genPattern(index, patternLength, 3500);
+        genPattern(patternIndex, patternLength, 3500);
         padGroupOn(4500);
         checkForClick(4500 + 5000);
     }
@@ -178,7 +178,7 @@
                 num = 0;
                 display("!!", 2, 0);
                 display(patternLength, 0, 2000);
-                genPattern(index, patternLength, 3500);
+                genPattern(patternIndex, patternLength, 3500);
                 padGroupOn(3500 + (1000 * patternLength));
                 checkForClick(3500 + (1000 * patternLength) + 5000);
             }, delay);
@@ -342,7 +342,7 @@
                 num = 0;
                 patternLength += 1;
                 display(patternLength, 0, 0);
-                genPattern(index, patternLength, 1500);
+                genPattern(patternIndex, patternLength, 1500);
                 checkForClick(1500 + 5000 + (1000 * patternLength));
             }
         }
