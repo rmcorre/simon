@@ -10,7 +10,8 @@
     //var j = null; //iterator, should be initialized to a number
     var num = 0; //consider renaming this to something more specific
     var element = null;
-    var clicked = null;
+    var padClicked = 0; //Holds the value of the data-id attribute of the pad clicked: 
+                        //Green = 1, Red = 2, Blue = 3,  yellow = 4
     var tone = null;
     var checkForClickId = null; //check if setTimeout returns an object type or a number type
     var genPatternId = null;
@@ -56,7 +57,7 @@
             //j = null;
             num = 0;
             element = null;
-            clicked = null;
+            padClicked = 0;
             tone = null;
 
             clearTimeout(checkForClickId);
@@ -97,7 +98,7 @@
         displayId2 = null;
 
 
-        clicked = null;
+        padClicked = 0;
         player.length = 0;
         pattern.length = 0;
         getPattern();
@@ -170,7 +171,7 @@
         clearTimeout(checkForClickId);
         checkForClickId = null;
 
-        if (clicked === null) {
+        if (padClicked === 0) {
             checkForClickId = setTimeout(function () {
                 padGroup.off("click");
                 player.length = 0;
@@ -241,14 +242,14 @@
         checkForClickId = null;
 
         element = $(this); //get the element clicked (#padGre, #padRed, #padYel, #padBlu)
-        clicked = parseInt(element.data("id"), 10); //get the value of the data-id attribute (1, 2, 3, 4)
-        tone = element.find("#audio" + clicked);
+        padClicked = parseInt(element.data("id"), 10); //get the value of the data-id attribute (1, 2, 3, 4)
+        tone = element.find("#audio" + padClicked);
         //var patternLength = pattern.slice(0, patternLength).length;
 
         flash(element, 500);
         playSound(tone);
 
-        if (clicked === pattern[num] && num < patternLength) {
+        if (padClicked === pattern[num] && num < patternLength) {
             // if id's match, push element clicked into player array
             clearTimeout(checkForClickId);
             checkForClickId = null;
@@ -262,20 +263,20 @@
 
             console.log("\n");
 
-            console.log("%c Check if clicked === value of pattern starting at index 0 (num)", "color: blue;");
-            console.log("%c clicked = " + clicked, "color: chocolate");
-            //console.log("Id of pad clicked = clicked     " + "//" + clicked);
+            console.log("%c Check if padClicked === value of pattern starting at index 0 (num)", "color: blue;");
+            console.log("%c padClicked = " + padClicked, "color: chocolate");
+            //console.log("Id of pad clicked = padClicked     " + "//" + padClicked);
             console.log("%c num = " + num, "color: cadetblue");            
             //console.log("Value of pattern[num] = " + pattern[num]);            
-            console.log("if clicked === pattern[" + num + "]     " + "%c // " + clicked + " === " + pattern[num], "color: chocolate;");
-            console.log("player.push(clicked)");                       
+            console.log("if padClicked === pattern[" + num + "]     " + "%c // " + padClicked + " === " + pattern[num], "color: chocolate;");
+            console.log("player.push(padClicked)");                       
 
-            player.push(clicked);
+            player.push(padClicked);
             console.log("player = " + "[" + player + "]");
             num += 1;
             console.log("num += 1");
             console.log("\n");
-            clicked = undefined;
+            padClicked = 0;
             checkForClick(5000);
             padGroupOn(0);
         }
@@ -285,7 +286,7 @@
                 clearTimeout(checkForClickId);
                 checkForClickId = null;
 
-                console.error("Error: clicked does not match pattern[num]");
+                console.error("Error: padClicked does not match pattern[num]");
                 console.log("strict = " + strict);
                 console.log("%c Get pattern at current patternLength length (patternLength starts at 1 and increment by 1 on each iteration)", "color: blue;");
                 console.log("%c patternLength = " + patternLength, "color: chocolate;");
@@ -296,13 +297,13 @@
 
                 console.log("\n");
 
-                console.log("%c Check if clicked === value of pattern starting at index 0 (num)", "color: blue;");
-                console.log("%c clicked = " + clicked, "color: chocolate");
-                //console.log("Id of pad clicked = clicked     " + "//" + clicked);
+                console.log("%c Check if padClicked === value of pattern starting at index 0 (num)", "color: blue;");
+                console.log("%c padClicked = " + padClicked, "color: chocolate");
+                //console.log("Id of pad clicked = padClicked     " + "//" + padClicked);
                 console.log("%c num = " + num, "color: cadetblue");            
                 //console.log("Value of pattern[num] = " + pattern[num]);            
-                console.log("if clicked === pattern[" + num + "]     " + "%c // " + clicked + " === " + pattern[num], "color: chocolate;");
-                console.log("player.push(clicked)");
+                console.log("if padClicked === pattern[" + num + "]     " + "%c // " + padClicked + " === " + pattern[num], "color: chocolate;");
+                console.log("player.push(padClicked)");
                 num = 0;
                 console.log("player[" + player + "] === " + "pattern[" + pattern.slice(0, patternLength) + "]");
                 console.log("start();");
@@ -311,7 +312,7 @@
             }
             else {
                 //clearTimeout(checkForClickId);
-                clicked = null;
+                padClicked = 0;
                 //padGroupOn();
                 checkForClick(0);
                 return;
@@ -336,7 +337,7 @@
             }
             else {
                 // else reset and increase patternLength by 1 - 
-                clicked = undefined;
+                padClicked = 0;
                 player.length = 0;
                 num = 0;
                 patternLength += 1;
