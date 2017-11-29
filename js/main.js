@@ -4,21 +4,21 @@
     var player = [];
     var pattern = [];
     var patternLength = 1;
-    var index = 0;    
+    var index = 0; //consider renaming this to arrayIndex  
     var pad = null;
-    var i = null;
-    var j = null;
-    var num = 0;
+    //var i = null; //iterator, should be initialized to a number
+    //var j = null; //iterator, should be initialized to a number
+    var num = 0; //consider renaming this to something more specific
     var element = null;
     var clicked = null;
     var tone = null;
-    var checkForClickId = null;
+    var checkForClickId = null; //check if setTimeout returns an object type or a number type
     var genPatternId = null;
     var flashId = null;
     var displayId1 = null;
     var displayId2 = null;
     var padGroupOnId = null;
-    var padGroupOnStatus = null;
+    var padGroupOnStatus = false;
 
     //cache dom
     var simon = $("#simon");
@@ -52,8 +52,8 @@
             patternLength = 1;
             index = 0;
             pad = null;
-            i = null;
-            j = null;
+            //i = null;
+            //j = null;
             num = 0;
             element = null;
             clicked = null;
@@ -135,7 +135,7 @@
 
         if (arguments[1] !== 0) {
             displayId1 = setTimeout(function () {
-                for (i = 0; i < blinks; i += 1) {
+                for (let i = 0; i < blinks; i += 1) {
                     displayText.text(content).fadeOut(250);
                     displayText.text(content).fadeIn(250);
                 }
@@ -170,7 +170,7 @@
         clearTimeout(checkForClickId);
         checkForClickId = null;
 
-        if (clicked === undefined) {
+        if (clicked === null) {
             checkForClickId = setTimeout(function () {
                 padGroup.off("click");
                 player.length = 0;
@@ -193,7 +193,7 @@
 
 
     function getPattern() {
-        for (j = 20 - 1; j >= 0; j -= 1) {
+        for (let j = 20 - 1; j >= 0; j -= 1) {
             pattern.push(getRandom(1, 4));
         }
     }
@@ -311,7 +311,7 @@
             }
             else {
                 //clearTimeout(checkForClickId);
-                clicked = undefined;
+                clicked = null;
                 //padGroupOn();
                 checkForClick(0);
                 return;
