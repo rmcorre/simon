@@ -245,7 +245,7 @@
 
         if (padClicked === 0) {
             checkForClickId = setTimeout(function () {
-                padGroup.off("click");
+                padGroupOff();
                 playerArr.length = 0;
                 num = 0;
                 display("!!", 2, 0);
@@ -289,7 +289,6 @@
         if (padGroupOnStatus) {
             padGroup.off("click");
             padGroupOnStatus = false;
-            //console.log("padGroupOnStatus = " + padGroupOnStatus);
         }        
     }
 
@@ -298,8 +297,8 @@
         if (!padGroupOnStatus) {
             padGroupOnId = setTimeout(function () {
                 padGroup.on("click", padClick);
-            }, delay);
-            padGroupOnStatus = true;
+                padGroupOnStatus = true;
+            }, delay);            
             //console.log("padGroupOnStatus = " + padGroupOnStatus);
         }
     }
@@ -376,10 +375,10 @@
                 console.log("strict = " + strict);
                 console.log("%c Get pattern at current patternLength length (patternLength starts at 1 and increment by 1 on each iteration)", "color: blue;");
                 console.log("%c patternLength = " + patternLength, "color: chocolate;");
-                console.log("pattern = " + "[" + pattern + "]");
+                console.log("pattern = " + "[" + patternArr.slice + "]");
                 //console.log("pattern size =" + "%c " + patternLength + " (patternLength)", "color: chocolate;");
                 console.log("pattern.slice(0," + "%c patternLength)     " + "// " + patternLength, "color: chocolate;");
-                console.log("pattern = " + "[" + pattern.slice(0, patternLength) + "]");
+                console.log("pattern = " + "[" + patternArr.slice(0, patternLength) + "]");
 
                 console.log("\n");
 
@@ -388,7 +387,7 @@
                 //console.log("Id of pad clicked = padClicked     " + "//" + padClicked);
                 console.log("%c num = " + num, "color: cadetblue");            
                 //console.log("Value of pattern[num] = " + pattern[num]);            
-                console.log("if padClicked === pattern[" + num + "]     " + "%c // " + padClicked + " === " + pattern[num], "color: chocolate;");
+                console.log("if padClicked === pattern[" + num + "]     " + "%c // " + padClicked + " === " + patternArr[num], "color: chocolate;");
                 console.log("playerArr.push(padClicked)");
                 num = 0;
                 console.log("playerArr[" + playerArr + "] === " + "pattern[" + pattern.slice(0, patternLength) + "]");
