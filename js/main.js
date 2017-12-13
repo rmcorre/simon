@@ -8,7 +8,7 @@
     var num = 0; //consider renaming this to something more specific
     var pad = null;
     var element = null;
-    var padClicked = 0; //Holds the value of the data-id attribute of the pad clicked: Green = 1, Red = 2, Blue = 3,  yellow = 4
+    var padClicked = 0; //Holds the string value of the data-id attribute of the pad clicked: Green = "1", Red = "2", Blue = "3",  yellow = "4"
     var tone = null;
     var padGroupOnStatus = false;
 
