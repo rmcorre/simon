@@ -132,8 +132,8 @@
         padGroupOnStatus = false;
 
         getPattern();
-        display("--", 2, 0);
-        display(patternLength, 0, 2000);
+        output("--", 2, 0);
+        output(patternLength, 0, 2000);
         genPattern(patternIndex, patternLength, 3500);
         padGroupOn(4500);
         checkForClick(4500 + 5000);
@@ -182,13 +182,13 @@
     }
 
 
-    function display(content, blinks, delay) {
+    function output(content, blinks, delay) {
         //clearTimeout(displayId1);
         clearTimeout(displayId2);
         displayId2 = null;
 
         if (arguments.length !== 3) {
-            console.warn("display() requires 3 arguments");
+            console.warn("output() requires 3 arguments");
             return;
         }
 
@@ -206,7 +206,7 @@
             }, delay);
         }
 
-        console.groupCollapsed("%cfunction display", "color: blue;");
+        console.groupCollapsed("%cfunction output", "color: blue;");
             console.log("strict = %c" + strict, "color: chocolate;");
             console.log("playerArr.length = %c" + playerArr.length, "color: chocolate;");
             console.log("patternArr.length = %c" + patternArr.length, "color: chocolate;");
@@ -248,8 +248,8 @@
                 padGroupOff();
                 playerArr.length = 0;
                 num = 0;
-                display("!!", 2, 0);
-                display(patternLength, 0, 2000);
+                output("!!", 2, 0);
+                output(patternLength, 0, 2000);
                 genPattern(patternIndex, patternLength, 3500);
                 padGroupOn(3500 + (1000 * patternLength));
                 checkForClick(3500 + (1000 * patternLength) + 5000);
@@ -418,7 +418,7 @@
             // check if win
             if (playerArr.length === 5) {
                 // check for win
-                display("win", 0, 0);
+                output("win", 0, 0);
             }
             else {
                 // else reset and increase patternLength by 1 - 
@@ -426,7 +426,7 @@
                 playerArr.length = 0;
                 num = 0;
                 patternLength += 1;
-                display(patternLength, 0, 0);
+                output(patternLength, 0, 0);
                 genPattern(patternIndex, patternLength, 1500);
                 checkForClick(1500 + 5000 + (1000 * patternLength));
             }
