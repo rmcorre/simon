@@ -1,0 +1,1 @@
+- turn off pads after a win: line 422, padGroupOff()
