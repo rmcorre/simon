@@ -416,7 +416,7 @@
             checkForClickId = null;
 
             // check if win
-            if (playerArr.length === 10) {
+            if (playerArr.length === 15) {
                 // check for win
                 output("win", 0, 0);
             }
